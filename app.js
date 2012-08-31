@@ -4,11 +4,18 @@ chrome.tabs.getSelected(null, function(tab) {
 
 chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse) {
+		
+		var target = 'validator_response';
+		if (localStorage["show_results_in"] == 'window') {
+			$('body').hide();
+			target = '_blank';
+		}
+
 		var f = document.createElement('form');
 		f.action  = 'http://validator.w3.org/check';
 		f.method  = "POST";
 		f.enctype = "multipart/form-data";
-		f.target  = 'validator_response';
+		f.target  = target;
 		f.acceptCharset = 'utf-8';
 		
 		// issue is here
@@ -17,5 +24,6 @@ chrome.extension.onMessage.addListener(
 		input[0].value = request.source;
 		$(f).append(input);
 		$(f).submit();
+
 	}
 );
